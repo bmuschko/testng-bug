@@ -1,0 +1,75 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'org.testng:testng:6.8.8'
+}
+
+test {
+    ignoreFailures = true
+    reports.html.enabled = false
+    
+    useTestNG() {
+        //listeners << 'org.testng.reporters.XMLReporter'
+        //useDefaultListeners = false
+        suiteXmlFiles << project.file('parallel-threads.xml')
+    }
+}
+
+ext {
+    testNum = 500
+    suiteNames = ['suite1', 'suite2', 'suite3']
+}
+
+task generateTestClasses {
+    doLast {
+        suiteNames.each { suiteName ->
+            for(i in 1..testNum) {
+                File testDir = new File("src/test/java/com/company/$suiteName")
+            
+                if(!testDir.exists()) {
+                    if(!testDir.mkdirs()) {
+                        throw new GradleException("Could not create directory '$testDir'")
+                    }
+                }
+            
+                File testClass = new File(testDir, "HelloWorldTest${i}.java")
+            
+                if(!testClass.exists()) {
+                    testClass.createNewFile()
+                    testClass << """
+package com.company.${suiteName};
+
+import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+
+import com.company.HelloWorld;
+
+public class HelloWorldTest${i} {
+    @Test
+    public void testToUpperCase1() {
+        HelloWorld helloWorld = new HelloWorld();
+        assertEquals(helloWorld.upperCase("hello world"), "HELLO WORLD");
+    }
+
+    @Test
+    public void testToUpperCase2() {
+        HelloWorld helloWorld = new HelloWorld();
+        assertEquals(helloWorld.upperCase("hello world"), "HELLO WORLD");
+    }
+
+    @Test
+    public void testToUpperCase3() {
+        HelloWorld helloWorld = new HelloWorld();
+        assertEquals(helloWorld.upperCase("hello world"), "HELLO WORLD");
+    }
+}"""
+                }
+            }
+        }
+    }
+}

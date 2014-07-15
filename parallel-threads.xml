@@ -1,0 +1,17 @@
+<suite name='Test Suite' parallel="tests" thread-count='5'>
+  <test name='Suite 1' parallel='methods' thread-count='10'>
+    <packages>
+      <package name='com.company.suite1.*' />
+    </packages>
+  </test>
+  <test name='Suite 2' parallel='methods' thread-count='10'>
+    <packages>
+      <package name='com.company.suite2.*' />
+    </packages>
+  </test>
+  <test name='Suite 3' parallel='methods' thread-count='10'>
+    <packages>
+      <package name='com.company.suite3.*' />
+    </packages>
+  </test>
+</suite>
